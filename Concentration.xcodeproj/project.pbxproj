@@ -58,10 +58,10 @@
 		30A152EE229D3C95003DFCE0 /* Concentration */ = {
 			isa = PBXGroup;
 			children = (
+				30A152F3229D3C95003DFCE0 /* Main.storyboard */,
 				30A152F1229D3C95003DFCE0 /* ViewController.swift */,
 				30240EF8229E5C9300BB12A0 /* Concentration.swift */,
 				30240EFA229E5D5100BB12A0 /* Card.swift */,
-				30A152F3229D3C95003DFCE0 /* Main.storyboard */,
 				30A152FB229D3C97003DFCE0 /* Info.plist */,
 				30A15301229D43D4003DFCE0 /* Supporting Files */,
 			);

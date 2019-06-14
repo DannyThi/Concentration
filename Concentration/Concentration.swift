@@ -8,17 +8,28 @@
 
 import Foundation
 
-class Concentration {
+struct Concentration {
     
-    var cards = [Card]()
+    private (set) var cards = [Card]()
     var flipCount = 0
-    var score = 0
+    private (set) var score = 0
     
-    var theme: String!
+    private(set) var theme: String!
     
-    var indexOfOneAndOnlyFaceUpCard: Int?
+    private var indexOfOneAndOnlyFaceUpCard: Int? {
+        get {
+            return cards.indices.filter { cards[$0].isFaceUp }.oneAndOnly
+        }
+        set {
+            for index in cards.indices {
+                cards[index].isFaceUp = (index == newValue)
+            }
+        }
+    }
     
-    func chooseCard(at index : Int) {
+    mutating func chooseCard(at index : Int) {
+        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index)): Chosen index not in cards.")
+        
         if cards[index].wasFlipped {
             score -= 1
         } else {
@@ -27,30 +38,22 @@ class Concentration {
         
         if !cards[index].isMatched {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
-                
                 // check if cards match
-                if cards[matchIndex].identifier == cards[index].identifier {
+                if cards[matchIndex] == cards[index] {
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
                     score += 2
                 }
-                
                 cards[index].isFaceUp = true
-                indexOfOneAndOnlyFaceUpCard = nil
-                
             } else {
-                
-                for flipDownIndex in cards.indices {
-                    cards[flipDownIndex].isFaceUp = false
-                }
-                cards[index].isFaceUp = true
                 indexOfOneAndOnlyFaceUpCard = index
             }
         }
-        
     }
     
     init(numberOfPairsOfCards: Int, theme: String) {
+        assert(numberOfPairsOfCards > 0, "Concentration.init(numberOfPairsOfCards: \(numberOfPairsOfCards)): You must have at least one pair of cards.")
+        
         for _ in 0 ..< numberOfPairsOfCards {
             let card = Card()
             cards += [card, card]
@@ -58,6 +61,12 @@ class Concentration {
         
         cards.shuffle()
         self.theme = theme
+    }
+}
+
+extension Collection {
+    var oneAndOnly: Element? {
+        return count == 1 ? first : nil
     }
 }
 
